@@ -1,0 +1,14 @@
+{
+    "name": "ModioHx",
+    "license": "Public",
+    "releasenote": "None yet.",
+    "contributors": ["ApprenticeAlchemist"],
+    "tags": ["Modio","Wrapper"],
+    "classPath": "Source",
+    "dependencies": {},
+    "version": "0.0.1",
+    "description": "A wrapper for the modio API",
+    "url": "https://github.com/Apprentice-Alchemist/Modio.hx.git",
+    "main": "tools/Main.hx"
+
+}
