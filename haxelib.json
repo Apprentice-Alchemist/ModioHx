@@ -1,6 +1,6 @@
 {
     "name": "ModioHx",
-    "license": "Public",
+    "license": "MIT",
     "releasenote": "None yet.",
     "contributors": ["ApprenticeAlchemist"],
     "tags": ["Modio","Wrapper"],
