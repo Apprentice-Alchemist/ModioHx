@@ -1,0 +1,8 @@
+{
+    "haxeTestExplorer.testCommand": [
+        "${haxe}",
+        "test.hxml",
+        "-lib",
+        "test-adapter"
+    ]
+}
