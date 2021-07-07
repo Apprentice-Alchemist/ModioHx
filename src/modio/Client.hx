@@ -8,13 +8,13 @@ import modio.endpoints.Endpoints;
 class Client {
 	public static var inst(default, null):Client;
 
-	private var token:String;
-    private var oauth:Null<String>;
 	public var endpoints(default, null):Endpoints;
-
+	var token:String;
+	var oauth:Null<String>;
 	/**
 	 * [Description]
 	 * @param tkn
+	 * @param ?auth:String
      * @throws (modio.Error) 
 	 */
 	public function new(tkn:String,?oauth:String) {

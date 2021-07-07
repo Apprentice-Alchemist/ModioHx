@@ -10,10 +10,10 @@ class Test extends utest.Test{
     public function testMe(async:Async){
         async.setTimeout(3000);
         client.endpoints.getMe().then(function(u){
-            Assert.pass();
+            Assert.pass("Data retrieved");
             async.done();
         }).catchError(function(e){
-            Assert.fail();
+            Assert.fail(e.toString());
             async.done();
         });
     }

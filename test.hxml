@@ -4,7 +4,6 @@
 -m Main
 
 -lib hxnodejs
-
 --js bin/modio.js
 --next
 -cmd node bin/modio.js

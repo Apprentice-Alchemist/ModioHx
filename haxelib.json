@@ -4,7 +4,7 @@
     "releasenote": "None yet.",
     "contributors": ["ApprenticeAlchemist"],
     "tags": ["Modio","Wrapper"],
-    "classPath": "Source",
+    "classPath": "src",
     "dependencies": {},
     "version": "0.0.1",
     "description": "A wrapper for the modio API",

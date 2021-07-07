@@ -4,5 +4,8 @@
         "test.hxml",
         "-lib",
         "test-adapter"
-    ]
+    ],
+    "ocaml.sandbox": {
+        "kind": "global"
+    }
 }

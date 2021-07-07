@@ -2,7 +2,7 @@ package modio.structs;
 
 typedef Game = {
 	var id:Int;
-	var status:Int;
+	var status:SubmissionStatus;
 	var submitted_by:User;
 	var date_added:UnixTime;
 	var date_updated:UnixTime;
@@ -30,4 +30,10 @@ typedef Game = {
 		var tags:Array<String>;
 		var hidden:Bool;
 	}>;
+}
+
+@:enum abstract SubmissionStatus(Int) {
+	var NotAccepted = 0;
+	var Accepted = 1;
+	var Deleted = 2;
 }

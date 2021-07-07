@@ -7,7 +7,7 @@ private class RequestError extends modio.Error {
 	public var code:Int;
 	public var msg:String;
 
-	override public function new(code, message) {
+	override public function new(code:Int, message) {
 		super(message);
 		this.code = code;
 		this.msg = Endpoints.codeToResponse(code);
@@ -16,6 +16,19 @@ private class RequestError extends modio.Error {
 	override function toString() {
 		return 'Error Code : $code => $msg';
 	}
+}
+
+@:structInit class Request {
+	public var path:String;
+	public var method:haxe.http.HttpMethod = Get;
+	public var headers:Map<String, String> = [];
+	public var parameters:Map<String, String> = [];
+	public var data:Null<String> = null;
+}
+
+@:structInit class Response {
+	var headers:Map<String, String>;
+	var data:String;
 }
 
 class Endpoints {
@@ -28,43 +41,62 @@ class Endpoints {
 		this.client = c;
 	}
 
-	public function makeRequest(path:String):Promise<Dynamic, RequestError> {
+	public function makeRequest<T:Dynamic>(request:Request):Promise<T, RequestError> {
 		return new Promise(function(f, e) {
 			var status:Int = 0;
-			final req = new haxe.Http(api_path + haxe.io.Path.normalize(api_version + path));
+			final req = new haxe.Http(api_path + haxe.io.Path.normalize(api_version + request.path));
 			req.addHeader("Content-Type", "application/x-www-form-urlencoded");
 			if (client.oauth != null) {
 				req.addHeader("Authorization", 'Bearer ${client.oauth}');
 			}
+			for (key => value in request.headers)
+				req.addHeader(key, value);
+			for (key => value in request.parameters)
+				req.addParameter(key, value);
+			if (request.data != null)
+				req.setPostData(request.data);
+
 			req.addParameter("api_key", client.token);
 			req.onData = d -> f(haxe.Json.parse(d));
 			req.onStatus = s -> status = s;
-			req.onError = err -> e(new RequestError(status, err));
+			req.onError = err -> {
+				trace(req.responseData);
+				// final e = try haxe.Json.parse(req.responseData) catch (_) null;
+				// final code = if (e != null && e.error != null && e.error.code != null) Std.parseInt(e.error.code) else status;
+				// final message = if(try e.error)
+				e(new RequestError(status, err));
+			}
 			req.request();
 		});
 	}
 
 	public function getMe():Promise<User, RequestError> {
-		return new modio.Promise(function(r, e) {
-			makeRequest("/me").then(r).catchError(e);
+		return new Promise(function(r, e) {
+			makeRequest({path: "/me"}).then(r).catchError(e);
 		});
 	}
 
 	public function getGame(id:Int):Promise<modio.structs.Game, RequestError> {
 		return new Promise(function(fullfill, error) {
-			makeRequest('/games/$id').then(fullfill).catchError(error);
+			makeRequest({path: '/games/$id'}).then(fullfill).catchError(error);
 		});
 	}
 
 	public function getGames():Promise<ObjectArray<Game>, RequestError> {
 		return new Promise(function(fullfill, error) {
-			makeRequest('/games').then(fullfill).catchError(error);
+			makeRequest({path: '/games'}).then(fullfill).catchError(error);
 		});
 	}
 
 	public function getMods(game_id:Int):Promise<ObjectArray<Mod>, RequestError> {
-		return new Promise(function(fullfill,error){
-			makeRequest('/games/$game_id/mods').then(fullfill).catchError(error);
+		return new Promise(function(fullfill, error) {
+			makeRequest({path: '/games/$game_id/mods'}).then(fullfill).catchError(error);
+		});
+	}
+
+	public function getMod(game_id:Int, mod_id:Int):Promise<Mod, RequestError> {
+		return new Promise(function(fullfill, error) {
+			makeRequest({path: '/games/$game_id/mods/$mod_id'}).then(fullfill).catchError(error);
 		});
 	}
 
